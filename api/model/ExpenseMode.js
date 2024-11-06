@@ -30,12 +30,8 @@ const expenseSchema = new mongoose.Schema(
         category: {
             type: String,
             required: true,
-            default: 'lain-lain'
-        },
-        description: {
-            type: String,
-            required: true,
-            default: '-'
+            default: 'lain-lain',
+            enum: ["food", "entertaiment", "heatlh", "groceries", "transportation", "electriciy"]
         },
         description: {
             type: String,
@@ -47,6 +43,11 @@ const expenseSchema = new mongoose.Schema(
             required: true,
             default: 'lain lain',
             enum: ["Debit Card", "Virtual Account", "QRIS", "Cash", "m-banking"]
+        },
+        invoice: {
+            type: String,
+            required: true,
+            default: '...'
         },
         userID: {
             type: mongoose.Schema.Types.ObjectId,
