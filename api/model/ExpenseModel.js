@@ -31,7 +31,7 @@ const expenseSchema = new mongoose.Schema(
             type: String,
             required: true,
             default: 'lain-lain',
-            enum: ["food", "entertaiment", "heatlh", "groceries", "transportation", "electriciy"]
+            enum: ["food", "entertainment", "health", "groceries", "transportation", "electriciy", "lain-lain"]
         },
         description: {
             type: String,
@@ -41,8 +41,8 @@ const expenseSchema = new mongoose.Schema(
         payment_method: {
             type: String,
             required: true,
-            default: 'lain lain',
-            enum: ["Debit Card", "Virtual Account", "QRIS", "Cash", "m-banking"]
+            default: 'lain-lain',
+            enum: ["Debit Card", "Virtual Account", "QRIS", "Cash", "m-banking", "lain-lain"]
         },
         invoice: {
             type: String,
