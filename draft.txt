@@ -65,3 +65,17 @@ response : {
         electriciy: num
     }
 }
+
+
+dummy data user
+[
+  { "name": "John Doe", "email": "john.doe1@example.com", "phone": "1234567890", "password": "mypwd" },
+  { "name": "Jane Smith", "email": "jane.smith2@example.com", "phone": "1234567891", "password": "mypwd" },
+  { "name": "Michael Brown", "email": "michael.brown3@example.com", "phone": "1234567892", "password": "mypwd" },
+  { "name": "Emily Johnson", "email": "emily.johnson4@example.com", "phone": "1234567893", "password": "mypwd" },
+  { "name": "Robert Garcia", "email": "robert.garcia9@example.com", "phone": "1234567898", "password": "mypwd" },
+  { "name": "Sarah White", "email": "sarah.white10@example.com", "phone": "1234567899", "password": "mypwd" },
+  { "name": "Peter Carter", "email": "peter.carter23@example.com", "phone": "1234567812", "password": "mypwd" },
+  { "name": "Chloe Perez", "email": "chloe.perez24@example.com", "phone": "1234567813", "password": "mypwd" },
+  { "name": "George Evans", "email": "george.evans25@example.com", "phone": "1234567814", "password": "mypwd" }
+]
