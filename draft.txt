@@ -1,0 +1,67 @@
+user : {
+    name string
+    email string
+    phone number
+    password string
+}
+
+money -> user : {
+    balance number
+    total_income number
+    total_expanse number
+    date
+}
+
+expense -> user : {
+    subject string
+    merchant string 
+    date string [bikin fungsi formatnya aja]
+    total number 
+    reimbuse bool 
+    category sting
+    description string
+    payment method iterate item : [debit card | virtual acc | qris | cash]
+    invoice string : link
+}
+
+ini aja di expense detail
+GET [api/july] => artinya dari bulan july, aug, sept, okt, nov
+response: {
+    food: [],
+    groce: [],
+    ....
+    all : []
+}
+
+response : [
+    {}
+    {}
+    {}
+    {}
+    {}
+]
+
+ini buat page expanse overview
+GET [api/july] => artinya dari bulan july, aug, sept, okt, nov
+response : {
+    money: {
+        total_balance: num,
+        total_income: num,
+        total_expanse: num,
+    },
+    summary: {
+        month_1: num,
+        month_2: num,
+        month_3: num,
+        month_4: num,
+        month_5: num,
+    },
+    budget: {
+        food: num,
+        entertaiment: num,
+        heatlh: num,
+        groceries: num,
+        transportation: num,
+        electriciy: num
+    }
+}
