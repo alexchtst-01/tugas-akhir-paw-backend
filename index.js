@@ -3,6 +3,8 @@ import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import ExpanseRoute from "./api/routes/ExpanseRoutes.js";
+import MoneyRoutes from "./api/routes/MoneyRoutes.js";
 
 dotenv.config();
 
@@ -16,6 +18,9 @@ app.use(
 app.use(morgan("dev"));
 
 app.use(express.json());
+
+app.use(ExpanseRoute);
+app.use(MoneyRoutes);
 
 app.get("/", async (req, res) => {
   try {
