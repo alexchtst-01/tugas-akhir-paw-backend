@@ -1,8 +1,12 @@
 import express from "express";
-import { justPostMoney } from "../controller/MoneyController.js";
+import {
+  getAccumulativeBalance,
+  justPostMoney,
+} from "../controller/MoneyController.js";
 
 const MoneyRoutes = express.Router();
 
 MoneyRoutes.post("/money", justPostMoney);
+MoneyRoutes.get("/money/:id", getAccumulativeBalance);
 
 export default MoneyRoutes;
