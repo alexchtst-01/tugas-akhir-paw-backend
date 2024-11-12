@@ -1,8 +1,9 @@
 import express from "express";
-import { postData } from "../controller/UserController.js";
+import { createUser, updateUser } from "../controller/UserController.js";
 
-const UserRoutes = express.Router()
+const UserRoutes = express.Router();
 
-UserRoutes.post('/', postData)
+UserRoutes.post("/register", createUser);
+UserRoutes.post("/user/:id", updateUser);
 
 export default UserRoutes;
