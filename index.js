@@ -3,7 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import ExpanseRoute from "./api/routes/ExpanseRoutes.js";
+import ExpanseRoute from "./api/routes/ExpenseRoutes.js";
 import MoneyRoutes from "./api/routes/MoneyRoutes.js";
 
 dotenv.config();
