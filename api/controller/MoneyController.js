@@ -1,27 +1,27 @@
 import Money from "../model/MoneyModel.js";
 import Expanse from "../model/ExpenseModel.js";
 
-const fufufafa = (data) => {
-  let res = [];
+function fufufafa(data) {
+  let temp = {};
 
-  data.forEach((element) => {
-    if (element.date && !res.includes(element.date)) {
-      res.push({ date: element.date, total: 0 });
+  for (let item of data) {
+    const dateObj = new Date(item.date);
+    const year = dateObj.getFullYear().toString();
+    const month = (dateObj.getMonth() + 1).toString();
+    const time = `${year}-${month}`;
+
+    if (!temp[time]) {
+      temp[time] = item.total;
+    } else {
+      temp[time] += item.total;
     }
-  });
-
-  data.forEach((element) => {
-    if (element.total && element.date) {
-      // tambahkan total sesuai bulan
-      const target = res.find((item) => item.date == element.date);
-      if (target) {
-        target.total += element.total;
-      }
-    }
-  });
-
-  return res;
-};
+  }
+  const result = Object.keys(temp).map((time) => ({
+    date: time,
+    totalMoney: temp[time],
+  }));
+  return result;
+}
 
 export const justPostMoney = async (req, res) => {
   const data = req.body;
@@ -38,11 +38,11 @@ export const getAccumulativeBalance = async (req, res) => {
   try {
     const userMoneyData = await Expanse.find({ userID: id }, "total date");
 
-    // console.log(userMoneyData);
-    await console.log(fufufafa(userMoneyData));
+    const accumulative = await fufufafa(userMoneyData);
     res.status(200).json({
       msg: "data berhasil di retrieve",
       money: userMoneyData,
+      acc: accumulative,
     });
   } catch (error) {
     res.status(500).json({
