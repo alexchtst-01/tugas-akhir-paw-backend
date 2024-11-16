@@ -10,3 +10,18 @@ export const createMoneyTrack = async (req, res) => {
     res.status(500).json({ msg: error });
   }
 };
+
+export const editMoney = async (req, res) => {
+  try {
+    const userID = req.params.id;
+    const { income } = req.body;
+    const existData = await Money.find({ userID: userID });
+    if (income) {
+      existData.income = income;
+    }
+    existData.save();
+    return req.status(200).json({ msg: "income berhasil dimasukan" });
+  } catch (error) {
+    return res.status(500).json({ msg: error });
+  }
+};
