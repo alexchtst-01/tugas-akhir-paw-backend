@@ -1,3 +1,4 @@
+import Money from "../model/MoneyModel.js";
 import User from "../model/UserModel.js";
 
 export const createUser = async (req, res) => {
@@ -16,26 +17,51 @@ export const createUser = async (req, res) => {
       password: password,
     });
     await user.save();
-    res.status(200).json({ msg: "user berhasil dibuat" });
+    const money = new Money({
+      userID: user._id,
+    });
+    await money.save();
+    res
+      .status(200)
+      .json({ msg: "user berhasil dibuat dengan data money kosong" });
   } catch (error) {
     res.status(500).json({ msg: error });
   }
 };
 
+// tunggu diganti aja dari fe
 export const updateUser = async (req, res) => {
   try {
     const id = req.params.id;
-    const { name, email, phone, password } = req.body;
-    const existUser = await User.find({
-      email: email,
-    });
+    const { name, email, phone, firstname, lastname, address, citycountry } =
+      req.body;
+    const existUser = await User.findById(id);
     if (!existUser)
-      return res.status(500).json({ msg: "email sudah pernah dipakai" });
-    await User.findByIdAndUpdate(
-      { id },
-      { name, email, phone, password },
-      { new: true }
-    );
+      return res.status(404).json({ msg: "user tidak ditemukan" });
+    if (name) {
+      existUser.name = name;
+    }
+    // ini nanti diganti nih
+    if (email) {
+      existUser.email = email;
+    }
+    // ini nanti diganti nih
+    if (phone) {
+      existUser.phone = phone;
+    }
+    if (firstname) {
+      existUser.firstname = firstname;
+    }
+    if (lastname) {
+      existUser.lastname = lastname;
+    }
+    if (address) {
+      existUser.address = address;
+    }
+    if (citycountry) {
+      existUser.citycountry = citycountry;
+    }
+    await existUser.save({ new: false });
     return res.status(200).json({ msg: "user berhasil di update" });
   } catch (error) {
     res.status(500).json({ msg: error });
