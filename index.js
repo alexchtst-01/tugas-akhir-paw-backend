@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import ExpanseRoute from "./api/routes/ExpenseRoutes.js";
 import MoneyRoutes from "./api/routes/MoneyRoutes.js";
 import UserRoutes from "./api/routes/UserRoutes.js";
+import AuthenticationRoute from "./api/routes/AuthenticationRoutes.js"
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use(ExpanseRoute);
 app.use(MoneyRoutes);
 app.use(UserRoutes);
+app.use(AuthenticationRoute);
 
 app.get("/", async (req, res) => {
   try {
