@@ -26,7 +26,6 @@ app.use(
       "https://penny-bot-c7r1bpxbr-ryanlukitos-projects.vercel.app"
     ],
     credentials: 'include',
-    http
   })
 );
 app.use(cookieParser());
