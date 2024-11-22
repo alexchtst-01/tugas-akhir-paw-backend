@@ -17,13 +17,16 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     origin: [
       "http://localhost:3000",
       "https://penny-bot-fe-brown.vercel.app",
       "https://penny-bot-bqzvn1bti-ryanlukitos-projects.vercel.app",
       "https://penny-bot-fwh29sbgn-ryanlukitos-projects.vercel.app",
       "https://penny-bot-qph0ackws-ryanlukitos-projects.vercel.app",
-      "https://penny-bot-c7r1bpxbr-ryanlukitos-projects.vercel.app"
+      "https://penny-bot-c7r1bpxbr-ryanlukitos-projects.vercel.app",
+      "https://ambagandalf.site"
+
     ],
     credentials: true
   })
