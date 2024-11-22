@@ -32,7 +32,7 @@ export const login = async (req, res) => {
       sameSite: 'none', // Helps with CSRF protection,
       path: "/", // Available throughout the site
       maxAge: 5 * 60 * 1000,
-
+      domain: "vercel.app"
     });
     return res.status(200).json({ msg: "berhasil login", token });
   } catch (error) {
