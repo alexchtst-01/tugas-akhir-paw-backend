@@ -1,3 +1,6 @@
 node_modules
 .env
 # *.txt
+image-442016-7b27065ce6ab.json
+*.jpeg
+test.js
