@@ -30,7 +30,7 @@ export const login = async (req, res) => {
       // domain: "axz.onrender.com"
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: tokenTime.number,
+      maxAge: 5 * 60 * 1000,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       domain:
         process.env.NODE_ENV === "production"
