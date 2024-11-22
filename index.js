@@ -26,7 +26,6 @@ app.use(
       "https://penny-bot-qph0ackws-ryanlukitos-projects.vercel.app",
       "https://penny-bot-c7r1bpxbr-ryanlukitos-projects.vercel.app",
       "https://ambagandalf.site"
-
     ],
     credentials: true
   })

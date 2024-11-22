@@ -26,8 +26,7 @@ export const login = async (req, res) => {
     };
     // kalo berhasil login
     const token = jwt.sign(data, jwtSecretKey, { expiresIn: "5m" });
-    res.cookie("OurSiteJWT", token, {
-      // domain: "axz.onrender.com"
+    res.cookie("_vercel_jwt", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 5 * 60 * 1000,
