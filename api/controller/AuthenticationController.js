@@ -7,7 +7,7 @@ export const login = async (req, res) => {
   const jwtSecretKey = process.env.JWT_SECRET_KEY;
   try {
     if (username.includes("@") && username.includes(".com")) {
-      user = await User.findOne({ name: username });
+      user = await User.findOne({ email: username });
     } else if (Number(username)) {
       user = await User.findOne({ phone: username });
     } else {
