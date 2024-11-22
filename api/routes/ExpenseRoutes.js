@@ -5,12 +5,17 @@ import {
   getDetailedExpenseByCategory,
   getSummaryExpense,
 } from "../controller/ExpanseController.js";
+import { authenticateMe } from "../midleware/AuthClient.js";
 
 const ExpenseRoute = express.Router();
 
-ExpenseRoute.post("/expense/:id", createExpense);
-ExpenseRoute.get("/expense/summary/:id", getSummaryExpense);
-ExpenseRoute.get("/expense/:id", getAllDetailedExpense);
-ExpenseRoute.get("/expense/:id/:category", getDetailedExpenseByCategory);
+ExpenseRoute.post("/expense", authenticateMe, createExpense);
+ExpenseRoute.get("/expense/summary/:id", authenticateMe, getSummaryExpense);
+ExpenseRoute.get("/expense/:id", authenticateMe, getAllDetailedExpense);
+ExpenseRoute.get(
+  "/expense/:id/:category",
+  authenticateMe,
+  getDetailedExpenseByCategory
+);
 
 export default ExpenseRoute;

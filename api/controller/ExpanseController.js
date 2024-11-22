@@ -15,7 +15,7 @@ const auth = new google.auth.GoogleAuth({
     type: process.env.GOOGLE_TYPE,
     project_id: process.env.GOOGLE_PROJECT_ID,
     private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
-    private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
     client_email: process.env.GOOGLE_CLIENT_EMAIL,
     client_id: process.env.GOOGLE_CLIENT_ID,
     auth_uri: process.env.GOOGLE_AUTH_URI,
@@ -31,7 +31,8 @@ const uploadImage = async (imgPath) => {
   const folderID = process.env.DRIVE_FOLDER_ID;
 
   try {
-    const mimeType = mime.getType(imgPath) || "application/octet-stream";``
+    const mimeType = mime.getType(imgPath) || "application/octet-stream";
+    ``;
     const response = await drive.files.create({
       requestBody: {
         name: path.basename(imgPath),
@@ -120,23 +121,48 @@ function fufufafaMoney(data) {
 }
 
 export const createExpense = async (req, res) => {
-  const data = req.body;
+  const {
+    subject,
+    merchant,
+    date,
+    total,
+    reimbuse,
+    category,
+    description,
+    payment_method,
+    invoice,
+    imagePath,
+  } = req.body;
+
+  // Validate input
+  if (!subject || !merchant || !date || !total || !payment_method) {
+    return res.status(400).json({ msg: "Missing required fields" });
+  }
+
+  console.log(req.userId)
+
   try {
-    if (data.imagePath) {
-      try {
-        const imgurl = await uploadImage(data.imagePath);
-        data.imagePath = imgurl;
-      } catch (err) {
-        console.error("Image upload failed:", err.message);
-        return res.status(500).json({ msg: "Image upload failed" });
-      }
-    }
-    await Expanse.insertMany(data);
-    res.status(200).json({ msg: "bershasil memasukan data" });
+    await Expanse.create({
+      subject,
+      merchant,
+      date,
+      total,
+      reimbuse,
+      category,
+      description,
+      payment_method,
+      imagePath,
+      invoice,
+      userID: req.userId,
+    });
+
+    res.status(200).json({ msg: "Successfully added expense data" });
   } catch (error) {
-    res.status(500).json({ msg: error });
+    console.error("Error creating expense:", error);
+    res.status(500).json({ msg: error.message || "An unknown error occurred" });
   }
 };
+
 
 export const getSummaryExpense = async (req, res) => {
   const id = req.params.id;
