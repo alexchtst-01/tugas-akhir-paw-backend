@@ -26,7 +26,7 @@ export const login = async (req, res) => {
     };
     // kalo berhasil login
     const token = jwt.sign(data, jwtSecretKey, { expiresIn: "5m" });
-    res.cookie("_vercel_jwt", token, {
+    res.cookie("OurSiteJWT", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 5 * 60 * 1000,
@@ -42,6 +42,42 @@ export const login = async (req, res) => {
   }
 };
 
-export const me = async (req, res) => {};
+export const me = async (req, res) => {
+  const { OurSiteJWT } = req.cookies; // Extract the token from cookies
+  if (!OurSiteJWT) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const jwtSecretKey = process.env.JWT_SECRET_KEY;
+  try {
+    // Verify the token
+    const decoded = jwt.verify(OurSiteJWT, jwtSecretKey);
+
+    // Retrieve user information from the token's payload
+    const { userId } = decoded;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Return user information if authenticated
+    return res.status(200).json({
+      message: "Authenticated",
+      auth: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+      },
+    });
+  } catch (e) {
+    // Handle token verification errors
+    return res.status(400).json({
+      message: "Something went wrong",
+      error: e.message,
+    });
+  }
+};
 
 export const logout = async (req, res) => {};
