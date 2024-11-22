@@ -29,9 +29,10 @@ export const login = async (req, res) => {
     res.cookie("OurSiteJWT", token, {
       httpOnly: true, // Can't be accessed via JavaScript
       secure: process.env.NODE_ENV === "production", // Use HTTPS only in production
-      sameSite: "Strict", // Helps with CSRF protection
+      sameSite: 'none', // Helps with CSRF protection,
       path: "/", // Available throughout the site
       maxAge: 5 * 60 * 1000,
+
     });
     return res.status(200).json({ msg: "berhasil login", token });
   } catch (error) {
