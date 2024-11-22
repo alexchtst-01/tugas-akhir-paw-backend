@@ -27,14 +27,15 @@ export const login = async (req, res) => {
     // kalo berhasil login
     const token = jwt.sign(data, jwtSecretKey, { expiresIn: "5m" });
     res.cookie("OurSiteJWT", token, {
-      httpOnly: true, // Can't be accessed via JavaScript
-      secure: process.env.NODE_ENV === "production", // Use HTTPS only in production
-      sameSite: 'none', // Helps with CSRF protection,
-      path: "/", // Available throughout the site
-      maxAge: 5 * 60 * 1000,
-      // domain: "vercel.app"
-      domain: "axz.onrender.com"
-      
+      // domain: "axz.onrender.com"
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: tokenTime.number,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      domain:
+        process.env.NODE_ENV === "production"
+          ? process.env.FRONTEND_URN
+          : "localhost",
     });
     return res.status(200).json({ msg: "berhasil login", token });
   } catch (error) {
