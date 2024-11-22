@@ -19,9 +19,10 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://penny-bot-bqzvn1bti-ryanlukitos-projects.vercel.app",
       "https://penny-bot-fe-brown.vercel.app",
-      "https://penny-bot-fwh29sbgn-ryanlukitos-projects.vercel.app"
+      "https://penny-bot-bqzvn1bti-ryanlukitos-projects.vercel.app",
+      "https://penny-bot-fwh29sbgn-ryanlukitos-projects.vercel.app",
+      "https://penny-bot-qph0ackws-ryanlukitos-projects.vercel.app"
     ],
     credentials: true,
   })
