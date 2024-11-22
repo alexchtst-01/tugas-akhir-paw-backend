@@ -1,5 +1,55 @@
 import Expanse from "../model/ExpenseModel.js";
 import Money from "../model/MoneyModel.js";
+import { google } from "googleapis";
+import fs from "fs";
+import path from "path";
+import mime from "mime";
+
+const KEYFILEPATH = "../../image-442016-7b27065ce6ab.json";
+const SCOPES = ["https://www.googleapis.com/auth/drive"];
+
+const auth = new google.auth.GoogleAuth({
+  keyFile: KEYFILEPATH,
+  scopes: SCOPES,
+});
+
+const uploadImage = async (imgPath) => {
+  const drive = google.drive({ version: "v3", auth });
+  const folderID = "1sOdj-GpvHxVjZq7BVclxbccLJtMb0XhQ";
+
+  try {
+    const mimeType = mime.getType(imgPath) || "application/octet-stream";``
+    const response = await drive.files.create({
+      requestBody: {
+        name: path.basename(imgPath),
+        parents: folderID ? [folderID] : [],
+      },
+      media: {
+        mimeType: mimeType,
+        body: fs.createReadStream(imgPath),
+      },
+    });
+
+    const fileId = response.data.id;
+    console.log("File uploaded successfully!");
+
+    // Set the file to be publicly accessible
+    await drive.permissions.create({
+      fileId: fileId,
+      requestBody: {
+        role: "reader",
+        type: "anyone",
+      },
+    });
+
+    const publicUrl = `https://drive.google.com/uc?id=${fileId}`;
+    // console.log("Public URL of the file:", publicUrl);
+    return publicUrl;
+  } catch (error) {
+    // console.error("Error uploading file:", error.message);
+    return "https://drive.google.com/uc?id=16C_q8KU5FrKpk0erHdIJkKfSGQqdRozN";
+  }
+};
 
 function fufufafaSummary(data) {
   let temp = {};
@@ -59,6 +109,15 @@ function fufufafaMoney(data) {
 export const createExpense = async (req, res) => {
   const data = req.body;
   try {
+    if (data.imagePath) {
+      try {
+        const imgurl = await uploadImage(data.imagePath);
+        data.imagePath = imgurl;
+      } catch (err) {
+        console.error("Image upload failed:", err.message);
+        return res.status(500).json({ msg: "Image upload failed" });
+      }
+    }
     await Expanse.insertMany(data);
     res.status(200).json({ msg: "bershasil memasukan data" });
   } catch (error) {
