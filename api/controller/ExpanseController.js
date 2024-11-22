@@ -102,6 +102,12 @@ function fufufafaCategory(data) {
       }
     }
   }
+
+  if (Object.keys(temp).length === 0) {
+    temp["food"] = 0;
+    temp["transportation"] = 0;
+    temp["electricity"] = 0;
+  }
   return temp;
 }
 
@@ -139,7 +145,7 @@ export const createExpense = async (req, res) => {
     return res.status(400).json({ msg: "Missing required fields" });
   }
 
-  console.log(req.userId)
+  console.log(req.userId);
 
   try {
     await Expanse.create({
@@ -163,7 +169,6 @@ export const createExpense = async (req, res) => {
   }
 };
 
-
 export const getSummaryExpense = async (req, res) => {
   const id = req.params.id;
   try {
@@ -172,7 +177,7 @@ export const getSummaryExpense = async (req, res) => {
       // "total date category reimbuse"
     );
     const userMoney = await Money.find(
-      { userID: req.params.id },
+      { userID: req.userId },
       "balance total_income total_expanse userID"
     );
 

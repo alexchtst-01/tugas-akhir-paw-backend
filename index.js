@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import ExpanseRoute from "./api/routes/ExpenseRoutes.js";
 import MoneyRoutes from "./api/routes/MoneyRoutes.js";
 import UserRoutes from "./api/routes/UserRoutes.js";
-import AuthenticationRoute from "./api/routes/AuthenticationRoutes.js"
+import AuthenticationRoute from "./api/routes/AuthenticationRoutes.js";
 import cookieParser from "cookie-parser";
 
 // Apply the middleware before your routes
@@ -17,14 +17,17 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      "https://penny-bot-bqzvn1bti-ryanlukitos-projects.vercel.app",
+      "https://penny-bot-fe-brown.vercel.app",
+    ],
     credentials: true,
   })
 );
 app.use(cookieParser());
 
 app.use(morgan("dev"));
-
 
 app.use(ExpanseRoute);
 app.use(MoneyRoutes);
