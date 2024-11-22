@@ -7,15 +7,20 @@ import ExpanseRoute from "./api/routes/ExpenseRoutes.js";
 import MoneyRoutes from "./api/routes/MoneyRoutes.js";
 import UserRoutes from "./api/routes/UserRoutes.js";
 import AuthenticationRoute from "./api/routes/AuthenticationRoutes.js"
+import cookieParser from "cookie-parser";
+
+// Apply the middleware before your routes
 
 dotenv.config();
 
 const app = express();
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:3000",
+    credentials: true,
   })
 );
+app.use(cookieParser());
 
 app.use(morgan("dev"));
 

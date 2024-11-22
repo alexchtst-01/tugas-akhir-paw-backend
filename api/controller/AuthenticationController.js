@@ -26,6 +26,13 @@ export const login = async (req, res) => {
     };
     // kalo berhasil login
     const token = jwt.sign(data, jwtSecretKey, { expiresIn: "5m" });
+    res.cookie("OurSiteJWT", token, {
+      httpOnly: true, // Can't be accessed via JavaScript
+      secure: process.env.NODE_ENV === "production", // Use HTTPS only in production
+      sameSite: "Strict", // Helps with CSRF protection
+      path: "/", // Available throughout the site
+      maxAge: 5 * 60 * 1000,
+    });
     return res.status(200).json({ msg: "berhasil login", token });
   } catch (error) {
     res.status(500).json({ msg: `terjadi error ${error}` });
