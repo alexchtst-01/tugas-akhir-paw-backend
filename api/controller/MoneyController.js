@@ -6,9 +6,7 @@ export const createMoneyTrack = async (req, res) => {
     const userID = req.userId;
     const { income } = req.body;
     const existData = await Money.findOne({ userID: userID });
-    console.log(income)
-    console.log(existData)
-    console.log(userID)
+    income = parseFloat(income);
     if (income) {
       existData.total_income = income;
     }

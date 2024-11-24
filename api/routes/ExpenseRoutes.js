@@ -4,6 +4,7 @@ import {
   getAllDetailedExpense,
   getDetailedExpenseByCategory,
   getSummaryExpense,
+  updateExpanse,
 } from "../controller/ExpanseController.js";
 import { authenticateMe } from "../midleware/AuthClient.js";
 
@@ -16,6 +17,12 @@ ExpenseRoute.get(
   "/expense/:id/:category",
   authenticateMe,
   getDetailedExpenseByCategory
+);
+
+ExpenseRoute.patch(
+  "/expense/:id",
+  authenticateMe,
+  updateExpanse
 );
 
 export default ExpenseRoute;
