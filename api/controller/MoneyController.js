@@ -2,26 +2,19 @@ import Money from "../model/MoneyModel.js";
 import Expanse from "../model/ExpenseModel.js";
 
 export const createMoneyTrack = async (req, res) => {
-  const data = req.body;
   try {
-    await Money.insertMany(data);
-    res.status(200).json({ msg: "berhasil memasukan data" });
-  } catch (error) {
-    res.status(500).json({ msg: error });
-  }
-};
-
-export const editMoney = async (req, res) => {
-  try {
-    const userID = req.params.id;
+    const userID = req.userId;
     const { income } = req.body;
-    const existData = await Money.find({ userID: userID });
+    const existData = await Money.findOne({ userID: userID });
+    console.log(income)
+    console.log(existData)
+    console.log(userID)
     if (income) {
-      existData.income = income;
+      existData.total_income = income;
     }
-    existData.save();
-    return req.status(200).json({ msg: "income berhasil dimasukan" });
+    await existData.save({ new: false });
+    return res.status(200).json({ msg: "income berhasil dimasukan" });
   } catch (error) {
-    return res.status(500).json({ msg: error });
+    return res.status(500).json({ msg: error.message });
   }
 };
