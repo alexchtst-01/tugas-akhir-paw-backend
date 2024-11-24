@@ -4,7 +4,7 @@ import Expanse from "../model/ExpenseModel.js";
 export const createMoneyTrack = async (req, res) => {
   try {
     const userID = req.userId;
-    const { income } = req.body;
+    let { income } = req.body;
     const existData = await Money.findOne({ userID: userID });
     income = parseFloat(income);
     if (income) {
