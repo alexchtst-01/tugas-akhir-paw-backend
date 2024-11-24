@@ -9,8 +9,6 @@ import UserRoutes from "./api/routes/UserRoutes.js";
 import AuthenticationRoute from "./api/routes/AuthenticationRoutes.js";
 import cookieParser from "cookie-parser";
 
-// Apply the middleware before your routes
-
 dotenv.config();
 
 const app = express();
