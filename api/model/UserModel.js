@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema(
             required: true,
             default: '-'
         },
-        citycountry: {
+        country: {
             type: String,
             required: true,
             default: '-'
