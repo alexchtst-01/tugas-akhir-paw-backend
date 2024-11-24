@@ -60,7 +60,6 @@ export const me = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Return user information if authenticated
     return res.status(200).json({
       message: "Authenticated",
       auth: true,
