@@ -246,61 +246,64 @@ export const updateExpanse = async (req, res) => {
 
     if (!subject || !merchant || !date || !total || !payment_method) {
       return res.status(400).json({ msg: "Missing required fields" });
-    }  
+    }
 
     const existExpense = await Expanse.findOne({
-      _id: expenseId
-    })
+      _id: expenseId,
+    });
 
     const currentTotal = parseFloat(existExpense.total);
     const newTotal = parseFloat(existExpense.total);
-    const finalTotal = currentTotal - newTotal
+    const finalTotal = currentTotal - newTotal;
 
-    if(subject){
-      existExpense.subject = subject
+    if (subject) {
+      existExpense.subject = subject;
     }
 
-    if(merchant){
-      existExpense.merchant = merchant
+    if (merchant) {
+      existExpense.merchant = merchant;
     }
 
-    if(date){
-      existExpense.date = date
+    if (date) {
+      existExpense.date = date;
     }
 
-    if(subject){
-      existExpense.subject = subject
+    if (subject) {
+      existExpense.subject = subject;
     }
 
-    if(total){
-      existExpense.total = finalTotal
+    if (total) {
+      existExpense.total = finalTotal;
     }
 
-    if(reimbuse){
-      existExpense.reimbuse = reimbuse
+    if (reimbuse) {
+      existExpense.reimbuse = reimbuse;
     }
 
-    if(category){
-      existExpense.category = category
+    if (category) {
+      existExpense.category = category;
     }
 
-    if(description){
-      existExpense.description = description
+    if (description) {
+      existExpense.description = description;
     }
 
-    if(payment_method){
-      existExpense.payment_method = payment_method
+    if (payment_method) {
+      existExpense.payment_method = payment_method;
     }
 
-    if(invoice){
-      existExpense.invoice = invoice
+    if (invoice) {
+      existExpense.invoice = invoice;
     }
 
-    if(imagePath){
-      existExpense.imagePath = imagePath
+    if (imagePath) {
+      existExpense.imagePath = imagePath;
     }
 
-    await existExpense.save({new: false})
+    await existExpense.save({ new: false });
 
-  } catch (error) {}
+    req.status(200).json({ msg: "data berhasil diupdate" });
+  } catch (error) {
+    req.status(500).json({ msg: `terjadi error ${error.message}` });
+  }
 };
