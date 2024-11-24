@@ -264,7 +264,7 @@ export const updateExpanse = async (req, res) => {
     }
 
     // Update user's balance and total expenses
-    money.balance += currentTotal - newTotal;
+    money.balance += newTotal - currentTotal;
     money.total_expanse += newTotal - currentTotal;
 
     // Update the expense fields
