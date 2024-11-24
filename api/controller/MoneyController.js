@@ -9,6 +9,7 @@ export const createMoneyTrack = async (req, res) => {
     income = parseFloat(income);
     if (income) {
       existData.total_income = income;
+      existData.balance += income;
     }
     await existData.save({ new: false });
     return res.status(200).json({ msg: "income berhasil dimasukan" });
