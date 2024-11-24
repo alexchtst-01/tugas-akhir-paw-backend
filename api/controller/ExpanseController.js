@@ -144,9 +144,7 @@ export const createExpense = async (req, res) => {
   if (!subject || !merchant || !date || !total || !payment_method) {
     return res.status(400).json({ msg: "Missing required fields" });
   }
-
   const userMoney = await Money.findOne({ userID: req.userId });
-
   total = parseFloat(total);
 
   try {
@@ -215,7 +213,6 @@ export const getAllDetailedExpense = async (req, res) => {
   }
 };
 
-// udah gw sorting nih pak dari paling baru ke paling lama
 export const getDetailedExpenseByCategory = async (req, res) => {
   const id = req.params.id;
   const category = req.params.category;
@@ -229,4 +226,81 @@ export const getDetailedExpenseByCategory = async (req, res) => {
   } catch (error) {
     res.status(500).json({ msg: error });
   }
+};
+
+export const updateExpanse = async (req, res) => {
+  try {
+    const {
+      subject,
+      merchant,
+      date,
+      total,
+      reimbuse,
+      category,
+      description,
+      payment_method,
+      invoice,
+      imagePath,
+    } = req.body;
+    const expenseId = req.id;
+
+    if (!subject || !merchant || !date || !total || !payment_method) {
+      return res.status(400).json({ msg: "Missing required fields" });
+    }  
+
+    const existExpense = await Expanse.findOne({
+      _id: expenseId
+    })
+
+    const currentTotal = parseFloat(existExpense.total);
+    const newTotal = parseFloat(existExpense.total);
+    const finalTotal = currentTotal - newTotal
+
+    if(subject){
+      existExpense.subject = subject
+    }
+
+    if(merchant){
+      existExpense.merchant = merchant
+    }
+
+    if(date){
+      existExpense.date = date
+    }
+
+    if(subject){
+      existExpense.subject = subject
+    }
+
+    if(total){
+      existExpense.total = finalTotal
+    }
+
+    if(reimbuse){
+      existExpense.reimbuse = reimbuse
+    }
+
+    if(category){
+      existExpense.category = category
+    }
+
+    if(description){
+      existExpense.description = description
+    }
+
+    if(payment_method){
+      existExpense.payment_method = payment_method
+    }
+
+    if(invoice){
+      existExpense.invoice = invoice
+    }
+
+    if(imagePath){
+      existExpense.imagePath = imagePath
+    }
+
+    await existExpense.save({new: false})
+
+  } catch (error) {}
 };
