@@ -174,7 +174,6 @@ export const getSummaryExpense = async (req, res) => {
   try {
     const expanse = await Expanse.find(
       { userID: id }
-      // "total date category reimbuse"
     );
     const userMoney = await Money.find(
       { userID: req.userId },
