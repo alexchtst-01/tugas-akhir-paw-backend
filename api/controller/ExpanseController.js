@@ -127,7 +127,7 @@ function fufufafaMoney(data) {
 }
 
 export const createExpense = async (req, res) => {
-  const {
+  let {
     subject,
     merchant,
     date,
@@ -230,7 +230,7 @@ export const getDetailedExpenseByCategory = async (req, res) => {
 
 export const updateExpanse = async (req, res) => {
   try {
-    const {
+    let {
       subject,
       merchant,
       date,
