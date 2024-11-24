@@ -201,7 +201,7 @@ export const getSummaryExpense = async (req, res) => {
 
 // udah gw sorting nih pak dari paling baru ke paling lama
 export const getAllDetailedExpense = async (req, res) => {
-  const id = req.params.id;
+  const id = req.userId;
   try {
     const expanse = await Expanse.find(
       { userID: id },

@@ -11,7 +11,7 @@ const ExpenseRoute = express.Router();
 
 ExpenseRoute.post("/expense", authenticateMe, createExpense);
 ExpenseRoute.get("/expense/summary", authenticateMe, getSummaryExpense);
-ExpenseRoute.get("/expense/:id", authenticateMe, getAllDetailedExpense);
+ExpenseRoute.get("/expense/detail", authenticateMe, getAllDetailedExpense);
 ExpenseRoute.get(
   "/expense/:id/:category",
   authenticateMe,
