@@ -147,6 +147,8 @@ export const createExpense = async (req, res) => {
 
   const userMoney = await Money.findOne({ userID: req.userId });
 
+  total = parseFloat(total);
+
   try {
     await Expanse.create({
       subject,
