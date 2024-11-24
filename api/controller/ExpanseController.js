@@ -347,3 +347,32 @@ export const updateExpanse = async (req, res) => {
     return res.status(500).json({ msg: `An error occurred: ${error.message}` });
   }
 };
+
+export const deleteExpense = async (req, res) => {
+  try {
+    const prodId = req.params.id;
+    const userId = req.userId;
+    // console.log(prodId, userId)
+    const existExpense = await Expanse.findOne({
+      _id: prodId,
+      userID: userId,
+    });
+    // console.log(existExpense)
+    if (!existExpense)
+      return res.status(404).json({ msg: "data tidak ditemukan" });
+    const money = parseFloat(existExpense.total);
+    const existMoney = await Money.findOne({
+      userID: userId,
+    });
+    existMoney.balance += money;
+    existMoney.total_expanse -= money;
+    await existMoney.save({ new: false });
+    await Expanse.deleteOne({
+      _id: prodId,
+      userID: userId,
+    });
+    res.status(200).json({ msg: "data berhasil dihapus" });
+  } catch (error) {
+    res.status(500).json({ msg: `terjadi kesalahan ${error.message}` });
+  }
+};

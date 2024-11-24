@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createExpense,
+  deleteExpense,
   getAllDetailedExpense,
   getDetailedExpenseByCategory,
   getSummaryExpense,
@@ -18,11 +19,7 @@ ExpenseRoute.get(
   authenticateMe,
   getDetailedExpenseByCategory
 );
-
-ExpenseRoute.patch(
-  "/expense/:id",
-  authenticateMe,
-  updateExpanse
-);
+ExpenseRoute.patch("/expense/:id", authenticateMe, updateExpanse);
+ExpenseRoute.delete("/expense/:id", authenticateMe, deleteExpense);
 
 export default ExpenseRoute;
