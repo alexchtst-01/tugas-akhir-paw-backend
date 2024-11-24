@@ -41,6 +41,16 @@ const userSchema = new mongoose.Schema(
             required: true,
             default: '-'
         },
+        nationality: {
+            type: String,
+            required: true,
+            default: '-'
+        },
+        occupation: {
+            type: String,
+            required: true,
+            default: '-'
+        },
     },
     {
         timeStamps: true
