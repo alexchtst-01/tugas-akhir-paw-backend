@@ -145,7 +145,9 @@ export const createExpense = async (req, res) => {
     return res.status(400).json({ msg: "Missing required fields" });
   }
 
-  console.log(req.userId);
+  const userMoney = await Money.findOne({ userID: req.userId });
+
+  total = parseFloat(total);
 
   try {
     await Expanse.create({
@@ -161,6 +163,9 @@ export const createExpense = async (req, res) => {
       invoice,
       userID: req.userId,
     });
+    userMoney.total_expanse += total;
+    userMoney.balance -= total;
+    await userMoney.save({ new: false });
 
     res.status(200).json({ msg: "Successfully added expense data" });
   } catch (error) {
@@ -172,9 +177,7 @@ export const createExpense = async (req, res) => {
 export const getSummaryExpense = async (req, res) => {
   const id = req.params.id;
   try {
-    const expanse = await Expanse.find(
-      { userID: id }
-    );
+    const expanse = await Expanse.find({ userID: id });
     const userMoney = await Money.find(
       { userID: req.userId },
       "balance total_income total_expanse userID"
