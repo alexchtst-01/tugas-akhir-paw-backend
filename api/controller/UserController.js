@@ -37,7 +37,7 @@ export const updateUser = async (req, res) => {
       firstname,
       lastname,
       address,
-      citycountry,
+      country,
       occupation,
       nationality,
     } = req.body;
@@ -58,8 +58,8 @@ export const updateUser = async (req, res) => {
     if (address) {
       existUser.address = address;
     }
-    if (citycountry) {
-      existUser.citycountry = citycountry;
+    if (country) {
+      existUser.country = country;
     }
     if (occupation) {
       existUser.occupation = occupation;
