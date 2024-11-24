@@ -66,20 +66,55 @@ const uploadImage = async (imgPath) => {
 };
 
 function fufufafaSummary(data) {
-  let temp = {};
+  const temp = {};
+  const monthNames = {
+    Januari: "January",
+    Februari: "February",
+    Maret: "March",
+    April: "April",
+    Mei: "May",
+    Juni: "June",
+    Juli: "July",
+    Agustus: "August",
+    September: "September",
+    Oktober: "October",
+    November: "November",
+    Desember: "December",
+  };
 
   for (let item of data) {
-    const dateObj = new Date(item.date);
-    const year = dateObj.getFullYear().toString();
-    const month = (dateObj.getMonth() + 1).toString();
-    const time = `${year}-${month}`;
+    let dateStr = item.date;
 
-    if (!temp[time]) {
-      temp[time] = item.total;
+    // Replace Indonesian month names with English equivalents
+    for (const [ind, eng] of Object.entries(monthNames)) {
+      dateStr = dateStr.replace(ind, eng);
+    }
+
+    let dateObj;
+    // Handle specific formats manually
+    if (/\d{2}-\d{2}-\d{4}/.test(dateStr)) {
+      const [day, month, year] = dateStr.split("-");
+      dateObj = new Date(`${year}-${month}-${day}`);
     } else {
-      temp[time] += item.total;
+      dateObj = new Date(dateStr);
+    }
+
+    if (isNaN(dateObj)) {
+      console.error(`Invalid date: ${item.date}`);
+      continue; // Skip invalid dates
+    }
+
+    const year = dateObj.getFullYear();
+    const month = dateObj.toLocaleString("en-US", { month: "long" });
+    const key = `${year}-${month}`;
+
+    if (!temp[key]) {
+      temp[key] = item.total;
+    } else {
+      temp[key] += item.total;
     }
   }
+
   return temp;
 }
 
@@ -87,27 +122,17 @@ function fufufafaCategory(data) {
   let temp = {};
 
   for (let item of data) {
-    // kalo ada reimbuse jadi nol aja kan di balikin uangnya
+    // Initialize category if not present
     if (!temp[item.category]) {
-      if (item.reimbuse) {
-        temp[item.category] = 0;
-      } else {
-        temp[item.category] = item.total;
-      }
-    } else {
-      if (item.reimbuse) {
-        temp[item.category] += 0;
-      } else {
-        temp[item.category] += item.total;
-      }
+      temp[item.category] = 0;
+    }
+
+    // Add total only if not reimbursed
+    if (!item.reimbuse) {
+      temp[item.category] += item.total;
     }
   }
 
-  if (Object.keys(temp).length === 0) {
-    temp["food"] = 0;
-    temp["transportation"] = 0;
-    temp["electricity"] = 0;
-  }
   return temp;
 }
 
@@ -173,7 +198,7 @@ export const createExpense = async (req, res) => {
 };
 
 export const getSummaryExpense = async (req, res) => {
-  const id = req.params.id;
+  const id = req.userId;
   try {
     const expanse = await Expanse.find({ userID: id });
     const userMoney = await Money.find(
@@ -181,16 +206,18 @@ export const getSummaryExpense = async (req, res) => {
       "balance total_income total_expanse userID"
     );
 
-    const summary = await fufufafaSummary(expanse);
-    const accMoney = await fufufafaMoney(userMoney);
-    const category = await fufufafaCategory(expanse);
+    // console.log(expanse);
+
+    const summary = fufufafaSummary(expanse);
+    const accMoney = fufufafaMoney(userMoney);
+    const category = fufufafaCategory(expanse);
 
     res.status(200).json({
       msg: "data berhasil di retrieve",
       money: accMoney,
       summary: summary,
       budget: category,
-      // expanse: expanse
+      // expanse: expanse,
     });
   } catch (error) {
     res.status(500).json({
