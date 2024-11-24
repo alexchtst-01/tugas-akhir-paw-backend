@@ -230,7 +230,7 @@ export const getDetailedExpenseByCategory = async (req, res) => {
 
 export const updateExpanse = async (req, res) => {
   try {
-    let {
+    const {
       subject,
       merchant,
       date,
@@ -242,68 +242,50 @@ export const updateExpanse = async (req, res) => {
       invoice,
       imagePath,
     } = req.body;
-    const expenseId = req.id;
 
-    if (!subject || !merchant || !date || !total || !payment_method) {
-      return res.status(400).json({ msg: "Missing required fields" });
+    const expenseId = req.params.id;
+
+    // Fetch the existing expense and user's money record
+    const existExpense = await Expanse.findOne({ _id: expenseId });
+    if (!existExpense) {
+      return res.status(404).json({ msg: "Expense not found" });
     }
 
-    const existExpense = await Expanse.findOne({
-      _id: expenseId,
-    });
+    const money = await Money.findOne({ userID: req.userId });
+    if (!money) {
+      return res.status(404).json({ msg: "User's money record not found" });
+    }
 
+    // Calculate balance and expenses adjustments
     const currentTotal = parseFloat(existExpense.total);
-    const newTotal = parseFloat(existExpense.total);
-    const finalTotal = currentTotal - newTotal;
-
-    if (subject) {
-      existExpense.subject = subject;
+    const newTotal = parseFloat(total);
+    if (isNaN(newTotal) || newTotal < 0) {
+      return res.status(400).json({ msg: "Invalid total value" });
     }
 
-    if (merchant) {
-      existExpense.merchant = merchant;
-    }
+    // Update user's balance and total expenses
+    money.balance += currentTotal - newTotal;
+    money.total_expanse += newTotal - currentTotal;
 
-    if (date) {
-      existExpense.date = date;
-    }
+    // Update the expense fields
+    if (subject) existExpense.subject = subject;
+    if (merchant) existExpense.merchant = merchant;
+    if (date) existExpense.date = date;
+    if (reimbuse) existExpense.reimbuse = reimbuse;
+    if (category) existExpense.category = category;
+    if (description) existExpense.description = description;
+    if (payment_method) existExpense.payment_method = payment_method;
+    if (invoice) existExpense.invoice = invoice;
+    if (imagePath) existExpense.imagePath = imagePath;
+    existExpense.total = newTotal;
 
-    if (subject) {
-      existExpense.subject = subject;
-    }
-
-    if (total) {
-      existExpense.total = finalTotal;
-    }
-
-    if (reimbuse) {
-      existExpense.reimbuse = reimbuse;
-    }
-
-    if (category) {
-      existExpense.category = category;
-    }
-
-    if (description) {
-      existExpense.description = description;
-    }
-
-    if (payment_method) {
-      existExpense.payment_method = payment_method;
-    }
-
-    if (invoice) {
-      existExpense.invoice = invoice;
-    }
-
-    if (imagePath) {
-      existExpense.imagePath = imagePath;
-    }
-
+    // Save the updated records
     await existExpense.save({ new: false });
+    await money.save({ new: false });
 
-    req.status(200).json({ msg: "data berhasil diupdate" });
+    return res.status(200).json({ msg: "Expense updated successfully" });
   } catch (error) {
-    req.status(500).json({ msg: `terjadi error ${error.message}` });
+    console.error(error);
+    return res.status(500).json({ msg: `An error occurred: ${error.message}` });
   }
 };
