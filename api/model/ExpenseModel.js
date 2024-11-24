@@ -31,7 +31,7 @@ const expenseSchema = new mongoose.Schema(
             type: String,
             required: true,
             default: 'lain-lain',
-            enum: ["food", "entertainment", "health", "groceries", "transportation", "electriciy", "lain-lain"]
+            enum: ["food", "entertainment", "health", "groceries", "transportation", "electricity", "lain-lain"]
         },
         description: {
             type: String,
