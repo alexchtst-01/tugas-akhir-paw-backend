@@ -32,9 +32,18 @@ export const createUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   try {
     const id = req.userId;
-    const { name, firstname,  lastname, address, citycountry, occupation, nationality } =
-      req.body;
-    const existUser = await User.findById(id);
+    const {
+      name,
+      firstname,
+      lastname,
+      address,
+      citycountry,
+      occupation,
+      nationality,
+    } = req.body;
+    const existUser = await User.findOne({
+      _id: id,
+    });
     if (!existUser)
       return res.status(404).json({ msg: "user tidak ditemukan" });
     if (name) {
