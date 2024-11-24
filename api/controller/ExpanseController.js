@@ -151,6 +151,35 @@ function fufufafaMoney(data) {
   return temp;
 }
 
+function fufufafaPercentage(money, data) {
+  const totalExpanse = fufufafaMoney(money).total_expanse;
+  const categoryExpanse = fufufafaCategory(data);
+  let temp = []; // Initialize as an array to store result objects
+
+  if (totalExpanse === 0) {
+    console.warn("Total expense is zero. Cannot calculate percentages.");
+    return temp; // Return empty array if totalExpanse is zero
+  }
+
+  // Calculate percentage for each category and prepare the result
+  for (let category in categoryExpanse) {
+    const percentage = (
+      (categoryExpanse[category] / totalExpanse) *
+      100
+    ).toFixed(2);
+    const amount = categoryExpanse[category]; // The actual amount for the category
+
+    // Create the object with name, percentage, and amount
+    temp.push({
+      name: category.charAt(0).toUpperCase() + category.slice(1), // Capitalize first letter
+      percentage: parseFloat(percentage), // Convert percentage to number
+      amount: amount, // The amount (no formatting needed here)
+    });
+  }
+
+  return temp;
+}
+
 export const createExpense = async (req, res) => {
   let {
     subject,
@@ -211,12 +240,14 @@ export const getSummaryExpense = async (req, res) => {
     const summary = fufufafaSummary(expanse);
     const accMoney = fufufafaMoney(userMoney);
     const category = fufufafaCategory(expanse);
+    const percentage = fufufafaPercentage(userMoney, expanse);
 
     res.status(200).json({
       msg: "data berhasil di retrieve",
       money: accMoney,
       summary: summary,
       budget: category,
+      percentage: percentage,
       // expanse: expanse,
     });
   } catch (error) {
