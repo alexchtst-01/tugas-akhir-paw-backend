@@ -25,11 +25,11 @@ export const login = async (req, res) => {
       name: user.name,
     };
     // kalo berhasil login
-    const token = jwt.sign(data, jwtSecretKey, { expiresIn: "5m" });
+    const token = jwt.sign(data, jwtSecretKey, { expiresIn: "24h" });
     res.cookie("OurSiteJWT", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60,
+      maxAge: 24 * 60 * 60 * 10000,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       domain:
         process.env.NODE_ENV === "production"
