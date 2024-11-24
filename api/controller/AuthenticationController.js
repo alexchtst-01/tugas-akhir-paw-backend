@@ -38,7 +38,7 @@ export const login = async (req, res) => {
     });
     return res.status(200).json({ msg: "berhasil login", token });
   } catch (error) {
-    res.status(500).json({ msg: `terjadi error ${error}` });
+    res.status(500).json({ msg: `terjadi error bang ${error}` });
   }
 };
 
