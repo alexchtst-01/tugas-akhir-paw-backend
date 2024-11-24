@@ -29,25 +29,16 @@ export const createUser = async (req, res) => {
   }
 };
 
-// tunggu diganti aja dari fe
 export const updateUser = async (req, res) => {
   try {
-    const id = req.params.id;
-    const { name, email, phone, firstname, lastname, address, citycountry } =
+    const id = req.userId;
+    const { name, firstname,  lastname, address, citycountry, occupation, nationality } =
       req.body;
     const existUser = await User.findById(id);
     if (!existUser)
       return res.status(404).json({ msg: "user tidak ditemukan" });
     if (name) {
       existUser.name = name;
-    }
-    // ini nanti diganti nih
-    if (email) {
-      existUser.email = email;
-    }
-    // ini nanti diganti nih
-    if (phone) {
-      existUser.phone = phone;
     }
     if (firstname) {
       existUser.firstname = firstname;
@@ -60,6 +51,12 @@ export const updateUser = async (req, res) => {
     }
     if (citycountry) {
       existUser.citycountry = citycountry;
+    }
+    if (occupation) {
+      existUser.occupation = occupation;
+    }
+    if (nationality) {
+      existUser.nationality = nationality;
     }
     await existUser.save({ new: false });
     return res.status(200).json({ msg: "user berhasil di update" });

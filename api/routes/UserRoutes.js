@@ -4,6 +4,6 @@ import { createUser, updateUser } from "../controller/UserController.js";
 const UserRoutes = express.Router();
 
 UserRoutes.post("/register", createUser);
-UserRoutes.patch("/user/:id", updateUser);
+UserRoutes.patch("/user/", updateUser);
 
 export default UserRoutes;
