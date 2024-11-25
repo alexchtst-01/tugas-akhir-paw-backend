@@ -43,17 +43,15 @@ export const login = async (req, res) => {
 };
 
 export const me = async (req, res) => {
-  const { OurSiteJWT } = req.cookies; // Extract the token from cookies
+  const { OurSiteJWT } = req.cookies;
   if (!OurSiteJWT) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
   const jwtSecretKey = process.env.JWT_SECRET_KEY;
   try {
-    // Verify the token
     const decoded = jwt.verify(OurSiteJWT, jwtSecretKey);
 
-    // Retrieve user information from the token's payload
     const { userId } = decoded;
     const user = await User.findById(userId);
     if (!user) {
