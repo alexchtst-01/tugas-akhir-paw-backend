@@ -73,3 +73,16 @@ export const updateUser = async (req, res) => {
     res.status(500).json({ msg: error });
   }
 };
+
+export const getUser = async (req, res) => {
+  try {
+    const dataUser = await User.findOne({
+      _id: req.userId,
+    });
+    if (!dataUser) return res.status(404).json({ msg: "data tidak ditemukan" });
+    const username = dataUser.name;
+    res.status(200).json({ username: username });
+  } catch (error) {
+    res.status(500).json({ msg: `terjadi kesalahan ${error.message}` });
+  }
+};
