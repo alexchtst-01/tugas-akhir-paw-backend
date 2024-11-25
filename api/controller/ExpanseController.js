@@ -293,7 +293,7 @@ export const updateExpanse = async (req, res) => {
       merchant,
       date,
       total,
-      reimbuse,
+      reimbuse, 
       category,
       description,
       payment_method,
@@ -301,7 +301,7 @@ export const updateExpanse = async (req, res) => {
       imagePath,
     } = req.body;
 
-    const expenseId = req.params.id;
+    const expenseId = req.query.id;
 
     // Fetch the existing expense and user's money record
     const existExpense = await Expanse.findOne({ _id: expenseId });
