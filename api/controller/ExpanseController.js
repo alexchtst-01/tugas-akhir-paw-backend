@@ -60,7 +60,6 @@ const uploadImage = async (imgPath) => {
     // console.log("Public URL of the file:", publicUrl);
     return publicUrl;
   } catch (error) {
-    // console.error("Error uploading file:", error.message);
     return "https://drive.google.com/uc?id=16C_q8KU5FrKpk0erHdIJkKfSGQqdRozN";
   }
 };
@@ -191,17 +190,31 @@ export const createExpense = async (req, res) => {
     description,
     payment_method,
     invoice,
-    imagePath,
   } = req.body;
 
-  // Validate input
+  // Ensure required fields are present
   if (!subject || !merchant || !date || !total || !payment_method) {
     return res.status(400).json({ msg: "Missing required fields" });
   }
+
   const userMoney = await Money.findOne({ userID: req.userId });
   total = parseFloat(total);
 
   try {
+    let imageUrl = "";
+
+    // If an image is uploaded, process and upload to Google Drive
+    if (req.file) {
+      const localPath = req.file.path;
+
+      // Upload to Google Drive and get the public URL
+      imageUrl = await uploadImage(localPath);
+
+      // Optionally delete the local file after uploading
+      fs.unlinkSync(localPath);
+    }
+
+    // Create the expense in the database
     await Expanse.create({
       subject,
       merchant,
@@ -211,10 +224,12 @@ export const createExpense = async (req, res) => {
       category,
       description,
       payment_method,
-      imagePath,
+      imagePath: imageUrl, // Store the Google Drive URL
       invoice,
       userID: req.userId,
     });
+
+    // Update user's financial data
     userMoney.total_expanse += total;
     userMoney.balance -= total;
     await userMoney.save({ new: false });

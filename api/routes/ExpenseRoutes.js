@@ -1,4 +1,5 @@
 import express from "express";
+import multer from "multer"
 import {
   createExpense,
   deleteExpense,
@@ -11,7 +12,9 @@ import { authenticateMe } from "../midleware/AuthClient.js";
 
 const ExpenseRoute = express.Router();
 
-ExpenseRoute.post("/expense", authenticateMe, createExpense);
+const upload = multer({dist: "/dist"});
+
+ExpenseRoute.post("/expense", authenticateMe, upload.single("image"), createExpense);
 ExpenseRoute.get("/expense/summary", authenticateMe, getSummaryExpense);
 ExpenseRoute.get("/expense/detail", authenticateMe, getAllDetailedExpense);
 ExpenseRoute.get(
