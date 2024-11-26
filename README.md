@@ -36,3 +36,15 @@ Hasilnya kalian akan diberikan response:
 
 ### API Dokumentasi 
     https://muddy-linen-bc9.notion.site/FurniStock-API-Docs-cbb19bd3f8644a2db0c345d831f49835
+
+## Link Website
+
+[Penny Track](https://ambagandalf.site)
+
+## Video Presentasi
+
+[Video Presentasi dan Demo](https://drive.google.com/file/d/1Rczjtj6CvI1JddrqyWTXbYOs4l3syFLJ/view?usp=sharing)
+
+## Link Presentasi Canva
+
+[Slide Presentasi](https://www.canva.com/design/DAGXMLRtmXw/MOIhrDiqvpQ5NTRfz1QTbw/edit?utm_content=DAGXMLRtmXw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
