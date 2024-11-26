@@ -305,10 +305,14 @@ export const updateExpanse = async (req, res) => {
       description,
       payment_method,
       invoice,
-      imagePath,
     } = req.body;
 
     const expenseId = req.query.id;
+
+    let imageUrl;
+
+    // Handle file upload if an image is provided
+    imageUrl = await UploadToDrive(files[0]);
 
     // Fetch the existing expense and user's money record
     const existExpense = await Expanse.findOne({ _id: expenseId });
@@ -340,8 +344,7 @@ export const updateExpanse = async (req, res) => {
     if (category) existExpense.category = category;
     if (description) existExpense.description = description;
     if (payment_method) existExpense.payment_method = payment_method;
-    if (invoice) existExpense.invoice = invoice;
-    if (imagePath) existExpense.imagePath = imagePath;
+    if (invoice) existExpense.invoice = imageUrl;
     existExpense.total = newTotal;
 
     // Save the updated records
