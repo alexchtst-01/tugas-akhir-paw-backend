@@ -16,7 +16,7 @@ const ExpenseRoute = express.Router();
 
 const upload = multer();
 
-ExpenseRoute.post("/expense",  upload.any(), authenticateMe, createExpense);
+ExpenseRoute.post("/expense", authenticateMe, upload.any(), createExpense);
 ExpenseRoute.get("/expense/summary", authenticateMe, getSummaryExpense);
 ExpenseRoute.get("/expense/detail", authenticateMe, getAllDetailedExpense);
 ExpenseRoute.get(

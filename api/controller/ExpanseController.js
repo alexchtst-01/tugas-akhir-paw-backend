@@ -254,7 +254,7 @@ export const createExpense = async (req, res) => {
       category,
       description,
       payment_method,
-      imagePath: imageUrl,
+      invoice: imageUrl,
       userID: req.userId,
     });
 
