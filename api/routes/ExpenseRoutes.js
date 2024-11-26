@@ -1,5 +1,7 @@
 import express from "express";
 import multer from "multer"
+import path from "path";
+import fs from "fs"
 import {
   createExpense,
   deleteExpense,
@@ -30,7 +32,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-ExpenseRoute.post("/expense", authenticateMe, upload.single("image"), createExpense);
+ExpenseRoute.post("/expense", upload.single("image"), createExpense);
 ExpenseRoute.get("/expense/summary", authenticateMe, getSummaryExpense);
 ExpenseRoute.get("/expense/detail", authenticateMe, getAllDetailedExpense);
 ExpenseRoute.get(
