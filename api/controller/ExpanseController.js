@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 import mime from "mime";
 import dotenv from "dotenv";
+import stream from "stream";
 
 dotenv.config();
 
