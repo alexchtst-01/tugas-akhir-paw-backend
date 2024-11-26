@@ -26,23 +26,20 @@ const auth = new google.auth.GoogleAuth({
   scopes: SCOPES,
 });
 
-const UploadToDrive = async (fileBuffer, fileName) => {
-  const tempPath = `/tmp/${fileName}`;
-
-  // Save to temporary file
-  fs.writeFileSync(tempPath, fileBuffer);
-
+const UploadToDrive = async (fileBuffer) => {
   try {
+    const bufferStream = new stream.PassThrough();
+    bufferStream.end(fileBuffer.buffer);
+
     const drive = google.drive({ version: "v3", auth });
 
     const response = await drive.files.create({
       requestBody: {
-        name: fileName,
-        mimeType: mime.getType(tempPath),
+        name: 'abcds',
       },
       media: {
-        mimeType: mime.getType(tempPath),
-        body: fs.createReadStream(tempPath),
+        mimeType: fileBuffer.mimetype,
+        body: bufferStream,
       },
     });
 
@@ -247,9 +244,7 @@ export const createExpense = async (req, res) => {
 
     // Handle file upload if an image is provided
     if (req.file) {
-      const localPath = req.file.path;
-      imageUrl = await uploadImage(localPath);
-      await fs.promises.unlink(localPath); // Safely delete the local file
+      imageUrl = await UploadToDrive(req.file);
     }
 
     // Create expense in the database
