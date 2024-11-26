@@ -31,8 +31,7 @@ const uploadImage = async (imgPath) => {
   const folderID = process.env.DRIVE_FOLDER_ID;
 
   try {
-    const mimeType = mime.getType(imgPath) || "application/octet-stream";
-    ``;
+    const mimeType = mime.getType(imgPath) 
     const response = await drive.files.create({
       requestBody: {
         name: path.basename(imgPath),
