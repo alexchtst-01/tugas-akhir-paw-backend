@@ -26,40 +26,45 @@ const auth = new google.auth.GoogleAuth({
   scopes: SCOPES,
 });
 
-const uploadImage = async (imgPath) => {
-  const drive = google.drive({ version: "v3", auth });
-  const folderID = process.env.DRIVE_FOLDER_ID;
+const UploadToDrive = async (fileBuffer, fileName) => {
+  const tempPath = `/tmp/${fileName}`;
+
+  // Save to temporary file
+  fs.writeFileSync(tempPath, fileBuffer);
 
   try {
-    const mimeType = mime.getType(imgPath) || "application/octet-stream";
+    const drive = google.drive({ version: "v3", auth });
 
     const response = await drive.files.create({
       requestBody: {
-        name: path.basename(imgPath),
-        parents: folderID ? [folderID] : [], // Assign folder if provided
+        name: fileName,
+        mimeType: mime.getType(tempPath),
       },
       media: {
-        mimeType: mimeType || "application/octet-stream", // Fallback MIME type
-        body: fs.createReadStream(imgPath),
+        mimeType: mime.getType(tempPath),
+        body: fs.createReadStream(tempPath),
       },
     });
 
-    const fileId = response.data.id;
+    console.log("File uploaded to Google Drive:", response.data);
 
-    // Make the file publicly accessible
+    // Set permissions
     await drive.permissions.create({
-      fileId,
+      fileId: response.data.id,
       requestBody: {
         role: "reader",
         type: "anyone",
       },
     });
 
-    const publicUrl = `https://drive.google.com/uc?id=${fileId}`;
-    return publicUrl; // Return the URL directly
+    // Clean up temp file
+    fs.unlinkSync(tempPath);
+
+    const publicUrl = `https://drive.google.com/uc?id=${response.data.id}`;
+    return publicUrl;
   } catch (error) {
-    console.error("Error uploading image to Google Drive:", error);
-    throw new Error("Failed to upload image to Google Drive");
+    console.error("Failed to upload file:", error);
+    throw error;
   }
 };
 
