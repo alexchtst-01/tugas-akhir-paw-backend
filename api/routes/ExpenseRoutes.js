@@ -1,5 +1,7 @@
 import express from "express";
 import multer from "multer"
+import path from "path";
+import fs from "fs"
 import {
   createExpense,
   deleteExpense,
@@ -12,25 +14,16 @@ import { authenticateMe } from "../midleware/AuthClient.js";
 
 const ExpenseRoute = express.Router();
 
-const uploadDir = path.resolve("./uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => cb(null, "uploads/"),
+//   filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
+// });
+// const upload = multer({ storage });
 
-// Configure multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir); // Save files to "uploads" directory
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, `${uniqueSuffix}-${file.originalname}`);
-  },
-});
-
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-ExpenseRoute.post("/expense", authenticateMe, upload.single("image"), createExpense);
+ExpenseRoute.post("/expense",  upload.single("image"), createExpense);
 ExpenseRoute.get("/expense/summary", authenticateMe, getSummaryExpense);
 ExpenseRoute.get("/expense/detail", authenticateMe, getAllDetailedExpense);
 ExpenseRoute.get(
