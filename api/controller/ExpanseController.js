@@ -242,9 +242,7 @@ export const createExpense = async (req, res) => {
     let imageUrl;
 
     // Handle file upload if an image is provided
-    if (req.file) {
-      imageUrl = await UploadToDrive(files[0]);
-    }
+    imageUrl = await UploadToDrive(files[0]);
 
     // Create expense in the database
     await Expanse.create({
