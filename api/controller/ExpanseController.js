@@ -311,6 +311,8 @@ export const updateExpanse = async (req, res) => {
 
     let imageUrl;
 
+    const { files } = req;
+
     // Handle file upload if an image is provided
     imageUrl = await UploadToDrive(files[0]);
 
