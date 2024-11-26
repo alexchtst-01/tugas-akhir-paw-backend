@@ -35,7 +35,7 @@ const UploadToDrive = async (fileBuffer) => {
 
     const response = await drive.files.create({
       requestBody: {
-        name: 'abcds',
+        name: fileBuffer.originalname, // Use the original name of the file
       },
       media: {
         mimeType: fileBuffer.mimetype,
@@ -46,7 +46,7 @@ const UploadToDrive = async (fileBuffer) => {
     console.log("File uploaded to Google Drive:", response.data);
 
     // Set permissions
-    drive.permissions.create({
+    await drive.permissions.create({
       fileId: response.data.id,
       requestBody: {
         role: "reader",
@@ -229,7 +229,7 @@ export const createExpense = async (req, res) => {
 
   if (!subject || !merchant || !date || !total || !payment_method) {
     return res.status(400).json({
-      msg: `Missing required fields either subject merchant date total or payment menthod`,
+      msg: `Missing required fields either subject merchant date total or payment method`,
     });
   }
 
@@ -237,7 +237,7 @@ export const createExpense = async (req, res) => {
   const expenseTotal = parseFloat(total);
 
   try {
-    let imageUrl = "";
+    let imageUrl = "https://drive.google.com/uc?id=default-image-id"; // Provide a default image URL
 
     // Handle file upload if an image is provided
     if (req.file) {
