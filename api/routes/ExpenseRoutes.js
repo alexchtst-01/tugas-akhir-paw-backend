@@ -25,7 +25,9 @@ ExpenseRoute.get(
   authenticateMe,
   getDetailedExpenseByCategory
 );
-ExpenseRoute.patch("/expense/:id", authenticateMe, updateExpanse);
+
+ExpenseRoute.patch("/expense", authenticateMe, updateExpanse);
+ExpenseRoute.delete("/expense/:id", authenticateMe, deleteExpense);
 ExpenseRoute.get("/expense/:id", authenticateMe, getSingleItembyId);
 
 export default ExpenseRoute;
