@@ -46,16 +46,13 @@ const UploadToDrive = async (fileBuffer) => {
     console.log("File uploaded to Google Drive:", response.data);
 
     // Set permissions
-    await drive.permissions.create({
+    drive.permissions.create({
       fileId: response.data.id,
       requestBody: {
         role: "reader",
         type: "anyone",
       },
     });
-
-    // Clean up temp file
-    fs.unlinkSync(tempPath);
 
     const publicUrl = `https://drive.google.com/uc?id=${response.data.id}`;
     return publicUrl;
