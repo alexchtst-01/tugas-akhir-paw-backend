@@ -45,7 +45,7 @@ const UploadToDrive = async (fileBuffer) => {
 
     console.log("File uploaded to Google Drive:", response.data);
 
-    // Set permissions
+    // Set permissions to make the file publicly accessible
     await drive.permissions.create({
       fileId: response.data.id,
       requestBody: {
@@ -236,12 +236,14 @@ export const createExpense = async (req, res) => {
   const userMoney = await Money.findOne({ userID: req.userId });
   const expenseTotal = parseFloat(total);
 
+  const { files } = req;
+
   try {
-    let imageUrl = "https://drive.google.com/uc?id=default-image-id"; // Provide a default image URL
+    let imageUrl;
 
     // Handle file upload if an image is provided
     if (req.file) {
-      imageUrl = await UploadToDrive(req.file);
+      imageUrl = await UploadToDrive(files[0]);
     }
 
     // Create expense in the database
