@@ -300,7 +300,7 @@ export const updateExpanse = async (req, res) => {
       merchant,
       date,
       total,
-      reimbuse, 
+      reimbuse,
       category,
       description,
       payment_method,
@@ -386,13 +386,13 @@ export const deleteExpense = async (req, res) => {
 
 export const getSingleItembyId = async (req, res) => {
   try {
-    const userId = req.userID;
+    const userId = req.userId;
     const prodId = req.params.id;
     const item = await Expanse.findOne({
       _id: prodId,
       userID: userId,
     });
-    res.status(200).json({ item: item });
+    res.status(200).json({ item: item, userId: userId, prodId: prodId });
   } catch (error) {
     res.status(500).json({ msg: `terjadi kesalahan ${error.message}` });
   }
