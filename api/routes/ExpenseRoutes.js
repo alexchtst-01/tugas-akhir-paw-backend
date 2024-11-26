@@ -7,6 +7,7 @@ import {
   deleteExpense,
   getAllDetailedExpense,
   getDetailedExpenseByCategory,
+  getSingleItembyId,
   getSummaryExpense,
   updateExpanse,
 } from "../controller/ExpanseController.js";
@@ -25,6 +26,6 @@ ExpenseRoute.get(
   getDetailedExpenseByCategory
 );
 ExpenseRoute.patch("/expense/:id", authenticateMe, updateExpanse);
-ExpenseRoute.delete("/expense/:id", authenticateMe, deleteExpense);
+ExpenseRoute.get("/expense/:id", authenticateMe, getSingleItembyId);
 
 export default ExpenseRoute;
