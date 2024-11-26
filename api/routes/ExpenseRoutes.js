@@ -23,7 +23,7 @@ const ExpenseRoute = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-ExpenseRoute.post("/expense",  upload.single("image"), createExpense);
+ExpenseRoute.post("/expense",  upload.single("invoiceFile"), createExpense);
 ExpenseRoute.get("/expense/summary", authenticateMe, getSummaryExpense);
 ExpenseRoute.get("/expense/detail", authenticateMe, getAllDetailedExpense);
 ExpenseRoute.get(
