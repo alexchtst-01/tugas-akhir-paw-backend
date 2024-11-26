@@ -36,10 +36,10 @@ const uploadImage = async (imgPath) => {
     const response = await drive.files.create({
       requestBody: {
         name: path.basename(imgPath),
-        parents: folderID ? [folderID] : [],
+        parents: folderID ? [folderID] : [], // Assign folder if provided
       },
       media: {
-        mimeType,
+        mimeType: mimeType || "application/octet-stream", // Fallback MIME type
         body: fs.createReadStream(imgPath),
       },
     });
@@ -229,11 +229,9 @@ export const createExpense = async (req, res) => {
   } = req.body;
 
   if (!subject || !merchant || !date || !total || !payment_method) {
-    return res
-      .status(400)
-      .json({
-        msg: `Missing required fields either subject merchant date total or payment menthod`,
-      });
+    return res.status(400).json({
+      msg: `Missing required fields either subject merchant date total or payment menthod`,
+    });
   }
 
   const userMoney = await Money.findOne({ userID: req.userId });
