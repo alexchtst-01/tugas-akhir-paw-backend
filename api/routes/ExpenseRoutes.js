@@ -14,7 +14,16 @@ import { authenticateMe } from "../midleware/AuthClient.js";
 
 const ExpenseRoute = express.Router();
 
-ExpenseRoute.post("/expense", createExpense);
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => cb(null, "uploads/"),
+//   filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
+// });
+// const upload = multer({ storage });
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+ExpenseRoute.post("/expense",  upload.single("image"), createExpense);
 ExpenseRoute.get("/expense/summary", authenticateMe, getSummaryExpense);
 ExpenseRoute.get("/expense/detail", authenticateMe, getAllDetailedExpense);
 ExpenseRoute.get(

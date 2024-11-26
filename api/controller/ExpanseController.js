@@ -31,24 +31,24 @@ const uploadImage = async (imgPath) => {
   const folderID = process.env.DRIVE_FOLDER_ID;
 
   try {
-    const mimeType = mime.getType(imgPath) 
+    const mimeType = mime.getType(imgPath) || "application/octet-stream";
+
     const response = await drive.files.create({
       requestBody: {
         name: path.basename(imgPath),
         parents: folderID ? [folderID] : [],
       },
       media: {
-        mimeType: mimeType,
+        mimeType,
         body: fs.createReadStream(imgPath),
       },
     });
 
     const fileId = response.data.id;
-    console.log("File uploaded successfully!");
 
-    // Set the file to be publicly accessible
+    // Make the file publicly accessible
     await drive.permissions.create({
-      fileId: fileId,
+      fileId,
       requestBody: {
         role: "reader",
         type: "anyone",
@@ -56,12 +56,50 @@ const uploadImage = async (imgPath) => {
     });
 
     const publicUrl = `https://drive.google.com/uc?id=${fileId}`;
-    // console.log("Public URL of the file:", publicUrl);
-    return publicUrl;
+    return publicUrl; // Return the URL directly
   } catch (error) {
-    return "https://drive.google.com/uc?id=16C_q8KU5FrKpk0erHdIJkKfSGQqdRozN";
+    console.error("Error uploading image to Google Drive:", error);
+    throw new Error("Failed to upload image to Google Drive");
   }
 };
+
+// the old one
+// const uploadImage = async (imgPath) => {
+//   const drive = google.drive({ version: "v3", auth });
+//   const folderID = process.env.DRIVE_FOLDER_ID;
+
+//   try {
+//     const mimeType = mime.getType(imgPath)
+//     const response = await drive.files.create({
+//       requestBody: {
+//         name: path.basename(imgPath),
+//         parents: folderID ? [folderID] : [],
+//       },
+//       media: {
+//         mimeType: mimeType,
+//         body: fs.createReadStream(imgPath),
+//       },
+//     });
+
+//     const fileId = response.data.id;
+//     console.log("File uploaded successfully!");
+
+//     // Set the file to be publicly accessible
+//     await drive.permissions.create({
+//       fileId: fileId,
+//       requestBody: {
+//         role: "reader",
+//         type: "anyone",
+//       },
+//     });
+
+//     const publicUrl = `https://drive.google.com/uc?id=${fileId}`;
+//     // console.log("Public URL of the file:", publicUrl);
+//     return publicUrl;
+//   } catch (error) {
+//     return "https://drive.google.com/uc?id=16C_q8KU5FrKpk0erHdIJkKfSGQqdRozN";
+//   }
+// };
 
 function fufufafaSummary(data) {
   const temp = {};
@@ -179,7 +217,7 @@ function fufufafaPercentage(money, data) {
 }
 
 export const createExpense = async (req, res) => {
-  let {
+  const {
     subject,
     merchant,
     date,
@@ -188,50 +226,43 @@ export const createExpense = async (req, res) => {
     category,
     description,
     payment_method,
-    invoice,
   } = req.body;
 
-  // Ensure required fields are present
   if (!subject || !merchant || !date || !total || !payment_method) {
     return res.status(400).json({ msg: "Missing required fields" });
   }
 
   const userMoney = await Money.findOne({ userID: req.userId });
-  total = parseFloat(total);
+  const expenseTotal = parseFloat(total);
 
   try {
     let imageUrl = "";
 
-    // If an image is uploaded, process and upload to Google Drive
+    // Handle file upload if an image is provided
     if (req.file) {
       const localPath = req.file.path;
-
-      // Upload to Google Drive and get the public URL
       imageUrl = await uploadImage(localPath);
-
-      // Optionally delete the local file after uploading
-      fs.unlinkSync(localPath);
+      await fs.promises.unlink(localPath); // Safely delete the local file
     }
 
-    // Create the expense in the database
+    // Create expense in the database
     await Expanse.create({
       subject,
       merchant,
       date,
-      total,
+      total: expenseTotal,
       reimbuse,
       category,
       description,
       payment_method,
-      imagePath: imageUrl, // Store the Google Drive URL
-      invoice,
+      imagePath: imageUrl,
       userID: req.userId,
     });
 
     // Update user's financial data
-    userMoney.total_expanse += total;
-    userMoney.balance -= total;
-    await userMoney.save({ new: false });
+    userMoney.total_expanse += expenseTotal;
+    userMoney.balance -= expenseTotal;
+    await userMoney.save();
 
     res.status(200).json({ msg: "Successfully added expense data" });
   } catch (error) {
@@ -239,6 +270,69 @@ export const createExpense = async (req, res) => {
     res.status(500).json({ msg: error.message || "An unknown error occurred" });
   }
 };
+
+// the old one
+// export const createExpense = async (req, res) => {
+//   let {
+//     subject,
+//     merchant,
+//     date,
+//     total,
+//     reimbuse,
+//     category,
+//     description,
+//     payment_method,
+//     invoice,
+//   } = req.body;
+
+//   // Ensure required fields are present
+//   if (!subject || !merchant || !date || !total || !payment_method) {
+//     return res.status(400).json({ msg: "Missing required fields" });
+//   }
+
+//   const userMoney = await Money.findOne({ userID: req.userId });
+//   total = parseFloat(total);
+
+//   try {
+//     let imageUrl = "";
+
+//     // If an image is uploaded, process and upload to Google Drive
+//     if (req.file) {
+//       const localPath = req.file.path;
+
+//       // Upload to Google Drive and get the public URL
+//       imageUrl = await uploadImage(localPath);
+
+//       // Optionally delete the local file after uploading
+//       fs.unlinkSync(localPath);
+//     }
+
+//     // Create the expense in the database
+//     await Expanse.create({
+//       subject,
+//       merchant,
+//       date,
+//       total,
+//       reimbuse,
+//       category,
+//       description,
+//       payment_method,
+//       imagePath: imageUrl, // Store the Google Drive URL
+//       invoice,
+//       userID: req.userId,
+//     });
+
+//     // Update user's financial data
+//     userMoney.total_expanse += total;
+//     userMoney.balance -= total;
+//     await userMoney.save({ new: false });
+
+//     res.status(200).json({ msg: "Successfully added expense data" });
+//   } catch (error) {
+//     console.error("Error creating expense:", error);
+//     res.status(500).json({ msg: error.message || "An unknown error occurred" });
+//   }
+// };
 
 export const getSummaryExpense = async (req, res) => {
   const id = req.userId;
