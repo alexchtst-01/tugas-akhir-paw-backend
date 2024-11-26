@@ -35,7 +35,7 @@ Hasilnya kalian akan diberikan response:
 **Backend server PAW kelompok 5**
 
 ### API Dokumentasi 
-    https://muddy-linen-bc9.notion.site/FurniStock-API-Docs-cbb19bd3f8644a2db0c345d831f49835
+    https://muddy-linen-bc9.notion.site/Penny-Track-API-Docs-145a108e203c80e58058c930043ce34a?pvs=4
 
 ## Link Website
 
